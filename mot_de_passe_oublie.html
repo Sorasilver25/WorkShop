@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mot de passe oublié</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Mot de passe oublié</h2>
+    <form id="mdp_oublie_form" method="POST" action="mot_de_passe_oublie.php">
+        <div class="form-group">
+            <label for="email">Adresse e-mail</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Entrez votre e-mail" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+
+    <!-- Popup de confirmation -->
+    <div id="popup_confirmation" class="alert alert-success mt-3" style="display: none;">
+        Votre demande a bien été envoyée. Vérifiez votre e-mail pour réinitialiser votre mot de passe.
+    </div>
+</div>
+
+<script>
+    // Simuler l'envoi du formulaire avec affichage du popup de confirmation
+    $('#mdp_oublie_form').on('submit', function(event) {
+        event.preventDefault(); // Empêche le rechargement de la page
+        $('#popup_confirmation').fadeIn();
+        setTimeout(function() {
+            $('#popup_confirmation').fadeOut();
+        }, 5000); // Masquer le popup après 5 secondes
+    });
+</script>
+</body>
+</html>
