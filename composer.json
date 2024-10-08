@@ -1,0 +1,6 @@
+{
+    "require": {
+        "smalot/pdfparser": "^2.11",
+        "guzzlehttp/guzzle": "^7.9"
+    }
+}

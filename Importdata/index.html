@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importer un PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Importer et Lire un Fichier PDF</h1>
+    </header>
+
+    <section class="container">
+        <h2>Choisissez un fichier PDF à importer :</h2>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <input type="file" name="pdfFile" accept="application/pdf" required>
+            <br><br>
+            <input type="submit" value="Importer et Lire le fichier PDF">
+        </form>
+    </section>
+
+    <footer>
+        <p>Créé par Moi - 2024</p>
+    </footer>
+</body>
+</html>
