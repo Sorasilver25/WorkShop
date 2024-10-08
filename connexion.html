@@ -22,7 +22,7 @@
             <div class="alert alert-danger"><?php echo $error_message; ?></div>
         <?php } ?> -->
         <button type="submit" class="btn btn-primary">Se connecter</button>
-        <button id="testConnectionBtn">Tester la connexion à la BDD</button>
+        <button id="testConnectionBtn" style="display: none;">Tester la connexion à la BDD</button>
     </form>
     <div class="mt-3">
         <a href="mot_de_passe_oublie.html">Mot de passe oublié ?</a><br>
@@ -30,16 +30,25 @@
     </div>
 </div>
 <script>
-  document.getElementById("testConnectionBtn").addEventListener("click", function() {
-      fetch('bdd.php')
-          .then(response => response.text())
-          .then(data => {
-              alert(data);
-          })
-          .catch(error => {
-              alert("Erreur de connexion : " + error);
-          });
-  });
+    document.getElementById("testConnectionBtn").addEventListener("click", function() {
+        // Vérifie si bdd.php existe
+        fetch('./bdd.php', { method: 'HEAD' }) // Utilise HEAD pour juste obtenir les en-têtes
+            .then(response => {
+                if (response.ok) { // Vérifie si la réponse est correcte
+                    return fetch('bdd.php'); // Si c'est OK, fais le fetch pour récupérer les données
+                } else {
+                    throw new Error("Fichier non trouvé"); // Lève une erreur si le fichier n'est pas trouvé
+                }
+            })
+            .then(response => response.text()) // Récupère le texte de bdd.php
+            .then(data => {
+                alert(data); // Affiche les données
+            })
+            .catch(error => {
+                console.error("Détails de l'erreur : ", error);
+                alert("Erreur totototototototoo : " + error.message); // Affiche l'erreur
+            });
+    });
 </script>
 </body>
 </html>
