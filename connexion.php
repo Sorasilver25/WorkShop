@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../fonction/bdd.php';
+include '../bdd.php';
 
 if (isset($_POST['nom_utilisateur']) && isset($_POST['mot_de_passe'])) {
     $nom_utilisateur = $_POST['nom_utilisateur'];
