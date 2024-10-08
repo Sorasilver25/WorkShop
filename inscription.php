@@ -1,5 +1,8 @@
 <?php
-include '/bdd.php';
+include 'bdd.php';
+
+$logFile = __DIR__ . '/erreurs.log'; // Le fichier sera créé dans le même répertoire que bdd.php
+error_log("Début du script de connexion.", 3, 'erreurs.log');
 
 if (isset($_POST['nom_utilisateur']) && isset($_POST['mot_de_passe']) && isset($_POST['securite_sociale']) && isset($_POST['date_naissance']) && isset($_POST['prenom']) && isset($_POST['nom'])) {
     $nom_utilisateur = $_POST['nom_utilisateur'];
