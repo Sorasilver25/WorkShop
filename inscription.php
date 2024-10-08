@@ -1,5 +1,5 @@
 <?php
-include '../bdd.php';
+include '/bdd.php';
 
 if (isset($_POST['nom_utilisateur']) && isset($_POST['mot_de_passe']) && isset($_POST['securite_sociale']) && isset($_POST['date_naissance']) && isset($_POST['prenom']) && isset($_POST['nom'])) {
     $nom_utilisateur = $_POST['nom_utilisateur'];
