@@ -7,7 +7,7 @@ if (isset($_POST['nom_utilisateur']) && isset($_POST['mot_de_passe'])) {
     $mot_de_passe = hash('sha256', $_POST['mot_de_passe']); // Cryptage du mot de passe avec SHA-256
 
     // Requête pour vérifier les identifiants
-    $sql = "SELECT * FROM utilisateurs WHERE nom_utilisateur = :nom_utilisateur";
+    $sql = "SELECT * FROM Utilisateur WHERE nom_utilisateur = :nom_utilisateur";
     $stmt = $bdd->prepare($sql);
     $stmt->bindParam(':nom_utilisateur', $nom_utilisateur);
     $stmt->execute();
