@@ -1,71 +1,60 @@
 <?php
 session_start();
 
-// Charger Guzzle via Composer
-require 'vendor/autoload.php'; 
-use GuzzleHttp\Client;
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdfFile'])) {
-    // Vérifie si le fichier téléchargé est un PDF
     if ($_FILES['pdfFile']['type'] == 'application/pdf') {
-        $pdfFilePath = $_FILES['pdfFile']['tmp_name'];
+        // Lire le fichier PDF
+        $pdfContent = file_get_contents($_FILES['pdfFile']['tmp_name']);
+        $base64Pdf = base64_encode($pdfContent);
+        $_SESSION['pdfBase64'] = $base64Pdf;
 
-        // Remplacez par votre clé API PDF.co
-        $apiKey = 'sknoploch.eisi24@eleve-irup.com_uMJWdKRnmD7zwzKwiK6Ejb9hcVkj9u5gRgm3GjyAR1eBcg6UWTuefirnr6baxXDZ';
+        // Uploader le fichier PDF en base64 vers PDF.co pour obtenir un lien URL
+        $apiKey = 'sknoploch.eisi24@eleve-irup.com_uMJWdKRnmD7zwzKwiK6Ejb9hcVkj9u5gRgm3GjyAR1eBcg6UWTuefirnr6baxXDZ'; // Remplacez par votre clé API
+        $data = array(
+            'file' => $base64Pdf,
+            'name' => 'uploaded-file.pdf'
+        );
 
-        // Créer une instance du client Guzzle
-        $client = new Client();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://api.pdf.co/v1/file/upload/base64');
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'x-api-key: ' . $apiKey,
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        // **Désactiver la vérification SSL**
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
-        try {
-            // Préparer la requête vers l'API PDF.co pour convertir le PDF en HTML
-            $response = $client->post('https://api.pdf.co/v1/pdf/convert/to/html', [
-                'headers' => [
-                    'x-api-key' => $apiKey,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    'url' => '', // Laissez vide si vous n'avez pas d'URL
-                    'file' => base64_encode(file_get_contents($pdfFilePath)) // Encodez le fichier en base64
-                ]
-            ]);
-
-            // Décoder la réponse de l'API
-            $result = json_decode($response->getBody(), true);
-
-            // Vérifiez si la conversion a réussi
-            if (isset($result['error']) && $result['error']) {
-                // Rediriger vers la page d'erreur avec le message
-                $_SESSION['error_message'] = "Erreur lors de la conversion : " . $result['message'];
-                header('Location: error.php'); // Redirection vers la page d'erreur
-                exit;
-            }
-
-            // Récupérez l'URL du contenu HTML converti
-            $htmlContentUrl = $result['url']; // URL du fichier HTML converti
-
-            // Stocker l'URL du HTML dans une session pour l'afficher plus tard
-            $_SESSION['pdfHtml'] = $htmlContentUrl;
-
-            // Rediriger vers la page d'affichage
-            header('Location: display.php');
-            exit; // Important d'exiter après avoir envoyé l'en-tête
-
-        } catch (Exception $e) {
-            // Rediriger vers la page d'erreur avec le message
-            $_SESSION['error_message'] = "Erreur lors de la requête API : " . $e->getMessage();
-            header('Location: error.php'); // Redirection vers la page d'erreur
+        $response = curl_exec($curl);
+        
+        // Vérifier les erreurs de CURL
+        if (curl_errno($curl)) {
+            echo json_encode(['success' => false, 'message' => 'Erreur CURL : ' . curl_error($curl)]);
+            curl_close($curl);
             exit;
         }
+
+        curl_close($curl);
+
+        $responseData = json_decode($response, true);
+
+        // Afficher la réponse de l'API pour mieux comprendre l'erreur
+        if ($responseData) {
+            if (isset($responseData['url'])) {
+                $_SESSION['pdfUrl'] = $responseData['url']; // Stocke l'URL du fichier dans la session
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Réponse API : ' . json_encode($responseData)]);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la communication avec l\'API. Réponse brute : ' . $response]);
+        }
     } else {
-        // Rediriger vers la page d'erreur si le fichier n'est pas un PDF
-        $_SESSION['error_message'] = "Erreur : Veuillez importer un fichier PDF valide.";
-        header('Location: error.php'); // Redirection vers la page d'erreur
-        exit;
+        echo json_encode(['success' => false, 'message' => 'Veuillez importer un fichier PDF valide.']);
     }
 } else {
-    // Rediriger vers la page d'erreur si la méthode n'est pas POST
-    $_SESSION['error_message'] = "Le formulaire n'a pas été soumis correctement.";
-    header('Location: error.php'); // Redirection vers la page d'erreur
-    exit;
+    echo json_encode(['success' => false, 'message' => 'Aucun fichier PDF trouvé.']);
 }
-?>
