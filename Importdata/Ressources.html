@@ -57,6 +57,20 @@
             scale: 1.10;
         }
 
+        .popup {
+            display: none; /* Caché par défaut */
+            position: absolute;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            transition: opacity 0.3s;
+            opacity: 0.9;
+            white-space: nowrap; /* Pour éviter le retour à la ligne */
+        }
+
         .back-home {
             display: inline-block;
             margin-top: 10px;
@@ -99,6 +113,7 @@
                 <img id="imgData" src="../DataLogo.png" alt="Data Logo" width="250" height="250" style="cursor: pointer;"> <!-- Ajustez le chemin du logo -->
             </div>
         </section>
+        <div id="popup" class="popup">Cette fonctionnalité n'est pas disponible dans la version POC !</div>
     </div>
 
     <footer>
@@ -141,6 +156,21 @@
                     window.location.href = 'DashboardJson.html';
                 })
                 .catch(error => console.error('Erreur:', error));
+        });
+
+        const imgData = document.getElementById('imgData');
+        const popup = document.getElementById('popup');
+
+        imgData.addEventListener('mouseover', function(event) {
+            // Positionner le popup près du logo
+            const rect = imgData.getBoundingClientRect();
+            popup.style.left = rect.left + 'px'; // À droite de l'image
+            popup.style.top = rect.bottom + 'px'; // Aligné avec le haut de l'image
+            popup.style.display = 'block'; // Afficher le popup
+        });
+
+        imgData.addEventListener('mouseout', function() {
+            popup.style.display = 'none'; // Masquer le popup
         });
 
         function parseXMLData(xmlString) {

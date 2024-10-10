@@ -1,3 +1,4 @@
+
 // Données des rappels pour chaque vaccin (en années)
 const vaccinationSchedules = {
     'DTP': { interval: 10, lastVaccinationAge: 6 },  // Dernier à 6 ans, tous les 10 ans ensuite
@@ -12,8 +13,79 @@ const vaccinationSchedules = {
 };
 
 // Âge actuel (à personnaliser)
-const currentAge = 1;  // Par exemple 1 an
+let currentAge = 1;  // Par exemple 1 an
 
+fetch('convert2xml.php') // Appel du fichier PHP qui renvoie les données JSON
+.then(response => response.json())
+.then(data => {
+                // Affiche le JSON formaté dans l'area
+                document.getElementById('jsonArea').value = JSON.stringify(data, null, 4);
+
+        function getCurrentDate() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0'); // Ajouter un zéro devant si nécessaire
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
+            const year = today.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function parseDate(dateString) {
+            const parts = dateString.split('/'); // Sépare la chaîne par le caractère '/'
+            const day = parseInt(parts[0], 10); // Récupère le jour
+            const month = parseInt(parts[1], 10) - 1; // Récupère le mois (0-11, donc on soustrait 1)
+            const year = parseInt(parts[2], 10); // Récupère l'année
+        
+            return new Date(year, month, day); // Crée et retourne l'objet Date
+        }
+
+        function calculateAge(currentDate, birthDate) {
+            console.error("Date de naissance :", birthDate);
+            const birth = parseDate(birthDate); // Convertir la date de naissance en objet Date
+            const today = new Date(currentDate); // Utiliser la date du jour fournie
+
+            console.error(birth,birthDate, today);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+        
+            // Ajuster l'âge si la date d'anniversaire n'est pas encore passée cette année
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            console.error("Âge calculé :", age);
+            return age;
+        }
+        
+        // Exemple d'utilisation
+        const currentDate = new Date(); // Récupérer la date du jour
+
+        let dateNaissance = 0;
+    data.forEach((value, index) => {
+    // Vérifie si la valeur n'est pas vide
+    if (value !== "") {
+        switch (value) {
+            case "Date de naissance":
+                // Récupérer la valeur de l'index + 1
+                if (index + 1 < data.length) {
+                    dateNaissance = data[index + 1];
+                    console.error(dateNaissance)
+                }
+
+                    
+        let age = calculateAge(currentDate, dateNaissance);
+        console.error(`Âge : ${age} ans`);
+
+        if (age >= 1 ){
+            currentAge = age;
+        }
+                break;
+            }
+        }
+    })
+
+   
+    
+    console.error(currentAge)
+})
 // Calculer les délais restants avant le prochain rappel
 const vaccinationData = Object.keys(vaccinationSchedules).map(vaccine => {
     const { interval, lastVaccinationAge } = vaccinationSchedules[vaccine];
@@ -42,8 +114,8 @@ const scatterChart = new Chart(ctx, {
         datasets: [{
             label: 'Délai restant avant le rappel des vaccins',
             data: vaccinationData.map(vaccine => ({ x: vaccine.x, y: vaccine.y })),
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgb(0,123,255)',
+            borderColor: 'rgba(0, 0, 0, 1)',
             pointRadius: 5
         }]
     },

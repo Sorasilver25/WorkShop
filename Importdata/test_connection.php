@@ -5,7 +5,7 @@ use GuzzleHttp\Client;
 session_start();
 
 // Remplacez par votre clé API
-$apiKey = 'aniceto.eisi24@eleve-irup.com_H5oYJLrDgJAfvfsIqAXVRJQEnNlgKJ7VrUGS4vkZtIxpsbYniyDg9I8neQk6CRTb'; // Remplacez par votre clé API
+$apiKey = 'adrienniceto42@gmail.com_c3tC4vFpsINbeL8IgnCmQhkvywTwdhKptbk3MfvWHIrrmUzWwCLNvc7Zmv0rEikS'; // Remplacez par votre clé API
 $client = new Client();
 
 try {

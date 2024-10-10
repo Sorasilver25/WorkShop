@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Médical</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,6 +64,12 @@
             background-color: #0056b3; /* Couleur au survol */
             color: white !important;
         }
+
+        canvas {
+            display: block;
+            margin-left: auto;
+            margin-right: auto; /* Centrer le canvas */
+        }
     </style>
 </head>
 <body>
@@ -84,7 +91,11 @@
     </table>
 
     <textarea style="display: none;" id="jsonArea" readonly></textarea>
+    <h2>Graphique à Points</h2>
+    <canvas id="scatterChart" width="800" height="500"></canvas>
 
+    <!-- Inclusion du script JavaScript pour le nuage de points -->
+    <script src="../nuagedepoint.js"></script>
 </body>
     <script>
         const processedValues = []; // Création d'un tableau pour stocker les valeurs traitées
@@ -118,10 +129,8 @@
                     // Récupérer la valeur de l'index + 1
                     if (index + 1 < data.length) {
                         const nomDeNaissance = data[index + 1];
-                        console.error(`Itération ${index}: Traitement du nom de naissance - ${nomDeNaissance}`);
                         processedValues.push({ "Nom de naissance": nomDeNaissance }); // Pousser l'objet dans le tableau
                     } else {
-                        console.error(`Itération ${index}: Nom de naissance détecté mais aucune valeur suivante disponible`);
                     }
                     break;
 
@@ -129,7 +138,6 @@
                     // Récupérer la valeur de l'index + 1
                     if (index + 1 < data.length) {
                         const prenomDeNaissance = data[index + 1];
-                        console.error(`Itération ${index}: Traitement du prénom - ${prenomDeNaissance}`);
                         processedValues.push({ "Prénom(s) de naissance": prenomDeNaissance }); // Pousser l'objet dans le tableau
                     }
                     break;
@@ -138,7 +146,6 @@
                     // Récupérer la valeur de l'index + 1
                     if (index + 1 < data.length) {
                         const matriculeINS = data[index + 1];
-                        console.error(`Itération ${index}: Traitement du N° matricule INS - ${matriculeINS}`);
                         processedValues.push({ "N° matricule INS": matriculeINS }); // Pousser l'objet dans le tableau
                     }
                     break;
@@ -146,7 +153,6 @@
                 case "TRAITEMENTS":
                     // Entrer dans la section des traitements
                     inTreatmentSection = true;
-                    console.error(`Itération ${index}: Début de la section TRAITEMENTS`);
                     break;
 
                 case "HOSPITALISATIONS":
@@ -154,7 +160,6 @@
                     inTreatmentSection = false;
                     // Entrer dans la section des traitements 2
                     inTreatmentSection2 = true;
-                    console.error(`Itération ${index}: Début de la section TRAITEMENTS2`);
                     break;
                 case "HANDICAPS":
                     // Sortir de la section des traitements
@@ -233,109 +238,80 @@
                     if (inTreatmentSection) {
                         // Condition pour ignorer les valeurs en majuscules et spécifiques
                         if (value.match(/^[A-Z\s]+$/) || value === "Mon espace santé" || value === "Synthèse du profil médical" || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Traitement": value }); // Pousser l'objet dans le tableau
                         }
                     } else if(inTreatmentSection2){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Hospitalisation": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection3){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Allergies": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection4){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Antécédents familiaux": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection5){
                         if (value.match(/^[A-Z\s]+$/)|| value.match(/^[A-Z\s]+$/) && value != "HEXYON SUSP INJ FL" || value == 'CONFIRMÉ PAR' || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccinations obligatoires": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection6){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre les infections à pneumocoque": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection7){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre les infections invasives à méningocoque de sérogroupe C": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection8){
                         if (value.match(/^[A-Z\s]+$/) || value=="Mon espace santé" || value=="Synthèse du profil médical" || value=="Vaccinations recommandées" || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre la rougeole, les oreillons et la rubéole (ROR)": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection9){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination antituberculeuse : BCG": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection10){
                         if (value.match(/^[A-Z\s]+$/) && value != "HEXYON SUSP INJ FL" || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre les infections invasives à méningocoque de groupe B": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection11){
                         if (value.match(/^[A-Z\s]+$/) || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre les Rotavirus": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection12){
                         if (value.match(/^[A-Z\s]+$/) || value == 'CONFIRMÉ PAR' || value.startsWith("Page")) {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre le papillomavirus": value }); // Pousser l'objet dans le tableau
                         }
                     }
                     else if(inTreatmentSection13){
                         if (value.match(/^[A-Z\s]+$/) || value == 'CONFIRMÉ PAR' || value.startsWith("Page") || value.startsWith('Aucun') || value.startsWith('Document généré') || value == "Mon espace santé" || value == "Synthèse du profil médical" || value == "PROFESSIONNELS DE SANTÉ") {
-                            console.error(`Itération ${index}: Valeur ignorée - ${value}`);
                         } else {
-                            console.error(`Itération ${index}: Traitement de la valeur - ${value}`);
                             processedValues.push({ "Vaccination contre la diphtérie, le tétanos, la poliomyélite, la coqueluche": value }); // Pousser l'objet dans le tableau
                         }
-                    }
-                    else{
-                        console.error(`Itération ${index}: Valeur non traitée - ${value}`);
                     }
                     break;
             }
