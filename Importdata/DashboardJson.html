@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Medical</title>
+    <title>Dashboard Médical</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f9f9f9; /* Couleur de fond claire */
+        }
+        h2 {
+            color: #333; /* Couleur du titre */
         }
         textarea {
             width: 100%;
@@ -15,42 +19,73 @@
             margin-top: 20px;
             padding: 10px;
             font-size: 14px;
+            border: 1px solid #ccc; /* Bordure du textarea */
+            border-radius: 4px; /* Coins arrondis */
+            background-color: #fff; /* Couleur de fond du textarea */
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: #fff; /* Couleur de fond de la table */
+            border-radius: 4px; /* Coins arrondis */
+            overflow: hidden; /* Pour les coins arrondis */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
         }
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #ddd; /* Bordure des cellules */
             padding: 10px;
             text-align: left;
         }
         th {
-            background-color: #f4f4f4;
+            background-color: #f4f4f4; /* Couleur de fond de l'en-tête */
+            color: #333; /* Couleur du texte de l'en-tête */
         }
         .category {
             font-weight: bold;
-            background-color: #f9f9f9;
+            background-color: #007bff; /* Couleur de fond pour la colonne de gauche */
+            color: white; /* Couleur du texte pour la colonne de gauche */
+        }
+        .details {
+            background-color: #007bff; /* Couleur de fond pour la colonne de droite */
+            color: white; /* Couleur du texte pour la colonne de gauche */
+        }
+        .back-home {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff; /* Couleur du lien de retour */
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .back-home:hover {
+            background-color: #0056b3; /* Couleur au survol */
+            color: white !important;
         }
     </style>
 </head>
 <body>
 
-    <h2>Données Organisées</h2>
+    <h2> Vos Données médicales</h2>
+    
+    <a href="../index.html" class="back-home">Retour à l'accueil</a>
+    
     <table>
         <thead>
             <tr>
-                <th>Catégorie</th>
-                <th>Détails</th>
+                <th class="category">Catégorie</th>
+                <th class="details">Détails</th>
             </tr>
         </thead>
         <tbody id="tableBody">
+            <!-- Ajoutez ici vos données -->
         </tbody>
     </table>
+
     <textarea style="display: none;" id="jsonArea" readonly></textarea>
 
+</body>
     <script>
         const processedValues = []; // Création d'un tableau pour stocker les valeurs traitées
         let inTreatmentSection = false; // Variable pour suivre si nous sommes dans la section des traitements

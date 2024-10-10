@@ -5,21 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mot de passe oublié</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+            margin-top: 5%;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .alert {
+            display: none;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Mot de passe oublié</h2>
+<div class="container login-container">
+    <div class="login-header">
+        <h2>Mot de passe oublié</h2>
+    </div>
     <form id="mdp_oublie_form" method="POST" action="mot_de_passe_oublie.php">
         <div class="form-group">
             <label for="email">Adresse e-mail</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="Entrez votre e-mail" required>
         </div>
-        <button type="submit" class="btn btn-primary">Envoyer</button>
+        <button type="submit" class="btn btn-primary btn-block">Envoyer</button>
+        <a href="index.html" class="btn btn-secondary btn-block mt-3">Retourner à l'accueil</a>
     </form>
 
     <!-- Popup de confirmation -->
-    <div id="popup_confirmation" class="alert alert-success mt-3" style="display: none;">
+    <div id="popup_confirmation" class="alert alert-success mt-3">
         Votre demande a bien été envoyée. Vérifiez votre e-mail pour réinitialiser votre mot de passe.
     </div>
 </div>

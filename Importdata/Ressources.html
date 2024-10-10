@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importer et Lire un Fichier PDF</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+            margin-top: 3rem;
+            height: 350px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f1f1f1;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        input[type="file"] {
+            margin-bottom: 1.5rem;
+        }
+        #jsonSection {
+            margin-top: 2rem;
+        }
+        
+        .divMid {
+            display: inline-flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dashboardbtn {
+            justify-content: center;
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+        }
+
+        #imgData:hover{
+            scale: 1.10;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff; /* Couleur du lien de retour */
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .back-home:hover {
+            background-color: #0056b3; /* Couleur au survol */
+            color: white !important;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Mes ressources</h1>
+    </header>
+    <div class="divMid">
+        <section class="container">
+            <h2>Choisissez un fichier PDF à importer :</h2>
+            <form id="pdfForm" enctype="multipart/form-data">
+                <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" class="form-control" required>
+                <br>
+
+                <input type="button" value="Envoyer le fichier PDF" id="uploadBtn" class="btn btn-primary btn-block">
+            </form>
+
+            <div id="jsonSection" style="display:none;">
+                <button id="displayDataBtn" class="btn btn-success btn-block">Afficher les données importées</button>
+            </div>
+            <br>
+            <input type="button" value="Retour à l'accueil" class="btn btn-primary btn-block" id="btnRetour">
+        </section>
+        <section class="container">
+            <h2 style="text-align: center;">Accéder à mon Dashboard</h2>
+            <div class="dashboardbtn">
+                <img id="imgData" src="../DataLogo.png" alt="Data Logo" width="250" height="250" style="cursor: pointer;"> <!-- Ajustez le chemin du logo -->
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; Tous droits réservés 2024 e-note-health</p>
+    </footer>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            var formData = new FormData(document.getElementById('pdfForm'));
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('PDF envoyé avec succès !');
+                    document.getElementById('jsonSection').style.display = 'block'; // Afficher le bouton pour afficher les données
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+        
+        $('#btnRetour').off('click').on('click', function () {
+            window.location.href = '../index.html';
+        })
+        document.getElementById('displayDataBtn').addEventListener('click', function() {
+            fetch('convert2xml.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur de réseau : ' + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    const xmlData = data;
+                    parseXMLData(xmlData);
+                    window.location.href = 'DashboardJson.html';
+                })
+                .catch(error => console.error('Erreur:', error));
+        });
+
+        function parseXMLData(xmlString) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+            const rows = xmlDoc.getElementsByTagName("row");
+            const resultArray = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const columns = rows[i].getElementsByTagName("column");
+                const rowArray = [];
+
+                for (let j = 0; j < columns.length; j++) {
+                    const textNode = columns[j].getElementsByTagName("text")[0];
+                    rowArray.push(textNode ? textNode.textContent : "");
+                }
+
+                resultArray.push(rowArray);
+            }
+
+            console.error(resultArray);
+        }
+    </script>
+</body>
+</html>
