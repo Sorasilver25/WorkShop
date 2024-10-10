@@ -7,7 +7,7 @@ if (!isset($_SESSION['pdfUrl'])) {
 }
 
 // Clé API PDF.co
-$apiKey = 'sknoploch.eisi24@eleve-irup.com_uMJWdKRnmD7zwzKwiK6Ejb9hcVkj9u5gRgm3GjyAR1eBcg6UWTuefirnr6baxXDZ'; // Remplacez par votre clé API
+$apiKey = 'aniceto.eisi24@eleve-irup.com_QgZ3EFeQIvkGEdqVOcaQEq5lrOna9re8xMEw6FbBs4UXyILIIdhqlMxTByZCn49A'; // Remplacez par votre clé API
 
 // Récupère l'URL du fichier PDF uploadé
 $uploadedFileUrl = $_SESSION['pdfUrl'];
@@ -27,7 +27,7 @@ curl_setopt($curl, CURLOPT_URL, 'https://api.pdf.co/v1/pdf/convert/to/xml');
 curl_setopt($curl, CURLOPT_POST, 1);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-    'Accept: application/json',
+    'Accept: application/json', // Assurez-vous que l'API renvoie un JSON
     'Content-Type: application/json',
     'x-api-key: ' . $apiKey // Clé API PDF.co
 ));
@@ -48,11 +48,9 @@ if (curl_errno($curl)) {
 curl_close($curl);
 
 // Afficher la réponse brute pour le débogage
-echo '<pre>';
-echo "Réponse brute de l'API :\n$response\n";
-echo '</pre>';
+// echo "Réponse brute de l'API :\n$response\n"; // Décommenter pour débogage
 
-// Conversion de la réponse JSON
+// Convertir la réponse JSON en tableau associatif
 $responseData = json_decode($response, true);
 
 // Vérifiez si la réponse est valide JSON
@@ -60,19 +58,40 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     die('Erreur lors du décodage JSON : ' . json_last_error_msg());
 }
 
-// Affichez la réponse de l'API pour le débogage
-echo '<pre>';
-print_r($responseData);
-echo '</pre>';
-
+// Vérifiez si l'API a renvoyé une erreur
 if (isset($responseData['error']) && $responseData['error']) {
     die('Erreur lors de la conversion : ' . $responseData['message']);
 }
 
-// Si la conversion est réussie, ouvrez le fichier XML converti dans un nouvel onglet
-if (isset($responseData['url'])) {
-    echo '<h1>Conversion réussie !</h1>';
-    echo '<a href="' . $responseData['url'] . '" target="_blank">Afficher le fichier XML converti</a>';
+// Vérifiez si l'URL du XML converti est présente
+if (isset($responseData['body'])) {
+    // Décodez les caractères échappés
+    $xmlString = html_entity_decode($responseData['body']); // Cela remplacera les entités HTML par les caractères correspondants
+
+    // Charger le XML
+    $xmlDoc = new DOMDocument();
+    libxml_use_internal_errors(true); // Ignore les erreurs de parsing
+    if (!$xmlDoc->loadXML($xmlString)) {
+        die('Erreur lors du chargement du XML : ' . libxml_get_errors()[0]->message);
+    }
+
+    // Récupérer tous les éléments <text>
+    $texts = $xmlDoc->getElementsByTagName('text');
+    $textArray = [];
+
+    foreach ($texts as $text) {
+        $textValue = $text->nodeValue;
+
+        // Vérifiez si le texte ne contient pas de caractères de nouvelle ligne, "Aucune vaccination renseignée", ou "-"
+        if (strpos($textValue, "\n") === false && strpos($textValue, "Aucune vaccination renseignée") === false && strpos($textValue, "-") === false) {
+            $textArray[] = $textValue; // Ajouter la valeur de chaque élément <text> au tableau si les conditions sont remplies
+        }
+    }
+
+    // Au lieu d'afficher, on retourne le tableau des textes
+    // Par exemple, vous pouvez renvoyer le tableau sous forme de JSON
+    echo json_encode($textArray); // Renvoyer le tableau en JSON
+
 } else {
     die('Erreur lors de la conversion : réponse inattendue de l\'API.');
 }
