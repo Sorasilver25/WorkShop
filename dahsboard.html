@@ -10,12 +10,15 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            text-align: center; /* Centrage du contenu */
         }
 
         table {
             border-collapse: collapse;
             width: 50%;
             margin-bottom: 40px;
+            margin-left: auto;
+            margin-right: auto; /* Centrer la table */
         }
 
         table,
@@ -33,6 +36,12 @@
         h2 {
             margin-top: 40px;
         }
+
+        canvas {
+            display: block;
+            margin-left: auto;
+            margin-right: auto; /* Centrer le canvas */
+        }
     </style>
 </head>
 
@@ -42,8 +51,8 @@
     <h2>Tableau de données</h2>
     <table>
         <tr>
-            <th>X</th>
-            <th>Y</th>
+            <th>Nom</th>
+            <th>Valeurs</th>
         </tr>
         <?php if (!empty($data)): ?>
         <?php foreach ($data as $point): ?>
@@ -67,54 +76,8 @@
     <h2>Graphique à Points</h2>
     <canvas id="scatterChart" width="600" height="400"></canvas>
 
-    <script>
-        // Préparer les données pour Chart.js
-        const dataPoints = '<? php echo json_encode($data); ?>';
-
-        // Transformer les données en format compatible avec Chart.js
-        const formattedData = dataPoints.map(point => ({
-            x: point.x,
-            y: point.y
-        }));
-
-        // Configuration du graphique
-        const ctx = document.getElementById('scatterChart').getContext('2d');
-        const scatterChart = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Points',
-                    data: formattedData,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'tata'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'test'
-                        }
-                    }
-                },
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Graphique à Points des Données'
-                    }
-                }
-            }
-        });
-    </script>
-
+    <!-- Inclusion du script JavaScript pour le nuage de points -->
+    <script src="nuagedepoint.js"></script>
 </body>
 
 </html>
