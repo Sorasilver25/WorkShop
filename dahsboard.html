@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <!-- Étape 5: Inclusion de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center; /* Centrage du contenu */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-bottom: 40px;
+            margin-left: auto;
+            margin-right: auto; /* Centrer la table */
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #333;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        canvas {
+            display: block;
+            margin-left: auto;
+            margin-right: auto; /* Centrer le canvas */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Étape 3: Génération du tableau -->
+    <h2>Tableau de données</h2>
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Valeurs</th>
+        </tr>
+        <?php if (!empty($data)): ?>
+        <?php foreach ($data as $point): ?>
+        <tr>
+            <td>
+                <?php echo htmlspecialchars($point['x']); ?>
+            </td>
+            <td>
+                <?php echo htmlspecialchars($point['y']); ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <tr>
+            <td colspan="2">Le tableau est vide</td>
+        </tr>
+        <?php endif; ?>
+    </table>
+
+    <!-- Étape 4: Génération du graphique à points avec Chart.js -->
+    <h2>Graphique à Points</h2>
+    <canvas id="scatterChart" width="600" height="400"></canvas>
+
+    <!-- Inclusion du script JavaScript pour le nuage de points -->
+    <script src="nuagedepoint.js"></script>
+</body>
+
+</html>
