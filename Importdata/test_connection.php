@@ -5,7 +5,7 @@ use GuzzleHttp\Client;
 session_start();
 
 // Remplacez par votre clé API
-$apiKey = 'sknoploch.eisi24@eleve-irup.com_uMJWdKRnmD7zwzKwiK6Ejb9hcVkj9u5gRgm3GjyAR1eBcg6UWTuefirnr6baxXDZ';
+$apiKey = 'aniceto.eisi24@eleve-irup.com_H5oYJLrDgJAfvfsIqAXVRJQEnNlgKJ7VrUGS4vkZtIxpsbYniyDg9I8neQk6CRTb'; // Remplacez par votre clé API
 $client = new Client();
 
 try {

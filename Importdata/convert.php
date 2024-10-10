@@ -3,11 +3,11 @@ session_start();
 
 // Vérifie si l'URL du fichier uploadé est présente dans la session
 if (!isset($_SESSION['pdfUrl'])) {
-    die('Erreur : URL du fichier non trouvée. Veuillez uploader un PDF d\'abord.');
+    die('Erreur : URL du f ichier non trouvée. Veuillez uploader un PDF d\'abord.');
 }
 
 // Clé API PDF.co
-$apiKey = 'sknoploch.eisi24@eleve-irup.com_uMJWdKRnmD7zwzKwiK6Ejb9hcVkj9u5gRgm3GjyAR1eBcg6UWTuefirnr6baxXDZ'; // Remplacez par votre clé API
+$apiKey = 'aniceto.eisi24@eleve-irup.com_H5oYJLrDgJAfvfsIqAXVRJQEnNlgKJ7VrUGS4vkZtIxpsbYniyDg9I8neQk6CRTb'; // Remplacez par votre clé API
 
 // Récupère l'URL du fichier PDF uploadé
 $uploadedFileUrl = $_SESSION['pdfUrl'];
