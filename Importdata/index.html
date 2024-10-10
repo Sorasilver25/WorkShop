@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importer et Lire un Fichier PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Importer et Lire un Fichier PDF</h1>
+    </header>
+
+    <section class="container">
+        <h2>Choisissez un fichier PDF à importer :</h2>
+        <form id="pdfForm" enctype="multipart/form-data">
+            <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required>
+            <br><br>
+            <input type="button" value="Envoyer le fichier PDF" id="uploadBtn">
+        </form>
+
+        <div id="jsonSection" style="display:none;">
+            <h2>Affichage des données JSON :</h2>
+            <button id="displayDataBtn">Afficher les données importées</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>Créé par Moi - 2024</p>
+    </footer>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            var formData = new FormData(document.getElementById('pdfForm'));
+            fetch('upload.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('PDF envoyé avec succès !');
+                    document.getElementById('jsonSection').style.display = 'block'; // Afficher le bouton pour afficher les données
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+
+        document.getElementById('displayDataBtn').addEventListener('click', function() {
+            fetch('convert2xml.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.open(data.url, '_blank'); // Ouvrir le fichier JSON converti dans un nouvel onglet
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+    </script>
+</body>
+</html>
