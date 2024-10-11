@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdfFile'])) {
         $_SESSION['pdfBase64'] = $base64Pdf;
 
         // Uploader le fichier PDF en base64 vers PDF.co pour obtenir un lien URL
-        $apiKey = 'adrienniceto42@gmail.com_c3tC4vFpsINbeL8IgnCmQhkvywTwdhKptbk3MfvWHIrrmUzWwCLNvc7Zmv0rEikS'; // Remplacez par votre clé API
+        $apiKey = 'madam.eisi24@eleve-irup.com_ckwl1vjK7ibNHA5kjTew3MXniacZ2dgaduGkyYc2EClzNGTOIoHsDFBIsKSpqWPf'; // Remplacez par votre clé API
         $data = array(
             'file' => $base64Pdf,
             'name' => 'uploaded-file.pdf'
