@@ -32,7 +32,7 @@
 
 # Hébergement en ligne
 # Le projet est également disponible en ligne sur l'adresse suivante :
-# http://irupteg.cluster029.hosting.ovh.net/.
+# https://www.irup.tech/ si le lien ne marche pas visiter -> http://irupteg.cluster029.hosting.ovh.net/.
 
 # Démonstration
 # Deux fichiers PDF d'exemple sont inclus dans le dépôt GitHub pour permettre des tests de démonstration.
